@@ -23,7 +23,7 @@ services:
     container_name: node_app
     restart: always
     env_file:
-      - ./node/.env
+      - ./.env
     depends_on:
       - db
     ports:
