@@ -1,0 +1,114 @@
+Starting docker compose build - 250901_024234
+Log File: /home/devops/3-tier-app/build-logs/docker_build_250901_024234.log
+time="2025-09-01T02:42:35+05:30" level=warning msg="/home/devops/3-tier-app/docker-compose.yaml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.36kB done
+#1 DONE 0.0s
+
+#2 [node internal] load build definition from Dockerfile
+#2 transferring dockerfile: 115B 0.0s done
+#2 DONE 0.0s
+
+#3 [nginx internal] load build definition from Dockerfile
+#3 transferring dockerfile: 98B 0.0s done
+#3 DONE 0.0s
+
+#4 [react internal] load build definition from Dockerfile
+#4 transferring dockerfile: 117B 0.0s done
+#4 DONE 0.1s
+
+#5 [react internal] load metadata for docker.io/library/node:alpine
+#5 DONE 2.7s
+
+#6 [nginx internal] load metadata for docker.io/library/nginx:latest
+#6 DONE 2.7s
+
+#7 [react internal] load .dockerignore
+#7 transferring context: 2B done
+#7 DONE 0.0s
+
+#8 [nginx internal] load .dockerignore
+#8 transferring context: 2B done
+#8 DONE 0.0s
+
+#9 [node internal] load .dockerignore
+#9 transferring context: 2B done
+#9 DONE 0.0s
+
+#10 [react 1/4] FROM docker.io/library/node:alpine@sha256:be4d5e92ac68483ec71440bf5934865b4b7fcb93588f17a24d411d15f0204e4f
+#10 DONE 0.0s
+
+#11 [nginx 1/2] FROM docker.io/library/nginx:latest@sha256:33e0bbc7ca9ecf108140af6288c7c9d1ecc77548cbfd3952fd8466a75edefe57
+#11 DONE 0.0s
+
+#12 [nginx internal] load build context
+#12 transferring context: 34B done
+#12 DONE 0.0s
+
+#13 [react internal] load build context
+#13 transferring context: 727B 0.0s done
+#13 DONE 0.0s
+
+#14 [nginx 2/2] COPY ./default.conf /etc/nginx/conf.d/default.conf
+#14 CACHED
+
+#15 [react 2/4] WORKDIR /usr/src/app
+#15 CACHED
+
+#16 [react 3/4] COPY . .
+#16 CACHED
+
+#17 [react 4/4] RUN npm install
+#17 CACHED
+
+#18 [react] exporting to image
+#18 exporting layers done
+#18 writing image sha256:345c7fdd72afe05543eadc8be3f36e392d4a6fa008d5d68fabb606ca84fbebed
+#18 writing image sha256:345c7fdd72afe05543eadc8be3f36e392d4a6fa008d5d68fabb606ca84fbebed 0.0s done
+#18 naming to docker.io/library/3-tier-app-react 0.0s done
+#18 DONE 0.1s
+
+#19 [nginx] exporting to image
+#19 exporting layers done
+#19 writing image sha256:3afa616d8f1c5bb8adcab33e019f9905eea2384e2772927e9c7da65a3d25fa4d 0.0s done
+#19 naming to docker.io/library/3-tier-app-nginx 0.0s done
+#19 DONE 0.1s
+
+#20 [node internal] load build context
+#20 transferring context: 60.88kB 0.2s done
+#20 DONE 0.2s
+
+#21 [node 3/4] COPY . .
+#21 CACHED
+
+#15 [node 2/4] WORKDIR /usr/src/app
+#15 CACHED
+
+#22 [node 4/4] RUN npm install
+#22 CACHED
+
+#23 [nginx] resolving provenance for metadata file
+#23 DONE 0.0s
+
+#24 [react] resolving provenance for metadata file
+#24 DONE 0.0s
+
+#25 [node] exporting to image
+#25 exporting layers done
+#25 writing image sha256:10fb2ee17e704d3f5477f4b419b5522fa3c9db56a6e2fa842a6ac79f8a2fe204 done
+#25 naming to docker.io/library/3-tier-app-node done
+#25 DONE 0.0s
+
+#26 [node] resolving provenance for metadata file
+#26 DONE 0.0s
+ 3-tier-app-node  Built
+ 3-tier-app-react  Built
+ 3-tier-app-nginx  Built
+ Container postgres_db  Running
+ Container node_app  Starting
+ Container node_app  Started
+ Container react_app  Starting
+ Container react_app  Started
+ Container nginx_proxy  Starting
+ Container nginx_proxy  Started
+Build and startup completed successfully... - 250901_024234.

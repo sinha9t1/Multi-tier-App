@@ -1,0 +1,173 @@
+Starting docker compose build - 250901_043531
+Log File: /home/devops/3-tier-app/build-logs/docker_build_250901_043531.log
+time="2025-09-01T04:35:32+05:30" level=warning msg="/home/devops/3-tier-app/docker-compose.yaml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.36kB done
+#1 DONE 0.0s
+
+#2 [nginx internal] load build definition from Dockerfile
+#2 transferring dockerfile: 98B 0.0s done
+#2 DONE 0.0s
+
+#3 [node internal] load build definition from Dockerfile
+#3 transferring dockerfile: 322B done
+#3 DONE 0.0s
+
+#4 [react internal] load build definition from Dockerfile
+#4 transferring dockerfile: 337B done
+#4 DONE 0.0s
+
+#5 [react internal] load metadata for docker.io/library/node:alpine
+#5 ...
+
+#6 [nginx internal] load metadata for docker.io/library/nginx:latest
+#6 DONE 3.0s
+
+#7 [nginx internal] load .dockerignore
+#7 transferring context: 2B done
+#7 DONE 0.0s
+
+#8 [nginx 1/2] FROM docker.io/library/nginx:latest@sha256:33e0bbc7ca9ecf108140af6288c7c9d1ecc77548cbfd3952fd8466a75edefe57
+#8 DONE 0.0s
+
+#9 [nginx internal] load build context
+#9 transferring context: 34B done
+#9 DONE 0.0s
+
+#10 [nginx 2/2] COPY ./default.conf /etc/nginx/conf.d/default.conf
+#10 CACHED
+
+#11 [nginx] exporting to image
+#11 exporting layers done
+#11 writing image sha256:3afa616d8f1c5bb8adcab33e019f9905eea2384e2772927e9c7da65a3d25fa4d done
+#11 naming to docker.io/library/3-tier-app-nginx done
+#11 DONE 0.0s
+
+#5 [react internal] load metadata for docker.io/library/node:alpine
+#5 DONE 3.0s
+
+#12 [react internal] load .dockerignore
+#12 transferring context: 2B done
+#12 DONE 0.0s
+
+#13 [node internal] load .dockerignore
+#13 transferring context: 2B done
+#13 DONE 0.0s
+
+#14 [node 1/5] FROM docker.io/library/node:alpine@sha256:be4d5e92ac68483ec71440bf5934865b4b7fcb93588f17a24d411d15f0204e4f
+#14 DONE 0.0s
+
+#15 [node 2/5] WORKDIR /usr/src/app
+#15 CACHED
+
+#16 [react internal] load build context
+#16 transferring context: 1.04kB done
+#16 DONE 0.0s
+
+#15 [react 2/5] WORKDIR /usr/src/app
+#15 CACHED
+
+#17 [nginx] resolving provenance for metadata file
+#17 DONE 0.0s
+
+#18 [node internal] load build context
+#18 transferring context: 61.18kB 0.1s done
+#18 DONE 0.2s
+
+#19 [react 3/5] COPY package*.json ./
+#19 DONE 0.1s
+
+#20 [node 3/5] COPY package*.json ./
+#20 DONE 0.1s
+
+#21 [react 4/5] RUN npm install
+#21 ...
+
+#22 [node 4/5] RUN npm install
+#22 8.728 
+#22 8.728 added 108 packages, and audited 109 packages in 7s
+#22 8.728 
+#22 8.728 12 packages are looking for funding
+#22 8.728   run `npm fund` for details
+#22 8.748 
+#22 8.748 11 vulnerabilities (4 low, 7 high)
+#22 8.748 
+#22 8.748 To address issues that do not require attention, run:
+#22 8.748   npm audit fix
+#22 8.748 
+#22 8.748 To address all issues (including breaking changes), run:
+#22 8.748   npm audit fix --force
+#22 8.748 
+#22 8.748 Run `npm audit` for details.
+#22 8.751 npm notice
+#22 8.751 npm notice New patch version of npm available! 11.5.1 -> 11.5.2
+#22 8.751 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.5.2
+#22 8.751 npm notice To update run: npm install -g npm@11.5.2
+#22 8.751 npm notice
+#22 DONE 10.0s
+
+#21 [react 4/5] RUN npm install
+#21 ...
+
+#23 [node 5/5] COPY . .
+#23 DONE 2.3s
+
+#21 [react 4/5] RUN npm install
+#21 ...
+
+#24 [node] exporting to image
+#24 exporting layers
+#24 exporting layers 0.5s done
+#24 writing image sha256:18caae654eae15a9e05629ececa9e369e4146b1e79195fbd5c3b3f40c5b3c38d done
+#24 naming to docker.io/library/3-tier-app-node done
+#24 DONE 0.5s
+
+#25 [node] resolving provenance for metadata file
+#25 DONE 0.0s
+
+#21 [react 4/5] RUN npm install
+#21 16.33 
+#21 16.33 added 273 packages, and audited 274 packages in 15s
+#21 16.33 
+#21 16.33 81 packages are looking for funding
+#21 16.33   run `npm fund` for details
+#21 16.36 
+#21 16.36 14 vulnerabilities (1 low, 6 moderate, 5 high, 2 critical)
+#21 16.36 
+#21 16.36 To address all issues, run:
+#21 16.36   npm audit fix
+#21 16.36 
+#21 16.36 Run `npm audit` for details.
+#21 16.36 npm notice
+#21 16.36 npm notice New patch version of npm available! 11.5.1 -> 11.5.2
+#21 16.36 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.5.2
+#21 16.36 npm notice To update run: npm install -g npm@11.5.2
+#21 16.36 npm notice
+#21 DONE 16.8s
+
+#26 [react 5/5] COPY . .
+#26 DONE 0.1s
+
+#27 [react] exporting to image
+#27 exporting layers 1.2s done
+#27 writing image sha256:643c679340828d8eea419f1e14fdcda81790c09e85faee412cac366d2fd91d3e done
+#27 naming to docker.io/library/3-tier-app-react done
+#27 DONE 1.3s
+
+#28 [react] resolving provenance for metadata file
+#28 DONE 0.0s
+ 3-tier-app-node  Built
+ 3-tier-app-react  Built
+ 3-tier-app-nginx  Built
+ Container postgres_db  Running
+ Container node_app  Recreate
+ Container node_app  Recreated
+ Container react_app  Recreate
+ Container react_app  Recreated
+ Container node_app  Starting
+ Container node_app  Started
+ Container react_app  Starting
+ Container react_app  Started
+ Container nginx_proxy  Starting
+ Container nginx_proxy  Started
+Build and startup completed successfully... - 250901_043531.

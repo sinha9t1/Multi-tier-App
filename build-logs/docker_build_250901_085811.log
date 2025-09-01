@@ -1,0 +1,91 @@
+Starting docker compose build - 250901_085811
+Log File: /home/devops/3-tier-app/build-logs/docker_build_250901_085811.log
+#1 [internal] load local bake definitions
+#1 reading from stdin 933B done
+#1 DONE 0.0s
+
+#2 [nginx internal] load build definition from Dockerfile
+#2 transferring dockerfile: 107B done
+#2 DONE 0.0s
+
+#3 [node internal] load build definition from Dockerfile
+#3 transferring dockerfile: 322B done
+#3 DONE 0.0s
+
+#4 [node internal] load metadata for docker.io/library/node:alpine
+#4 DONE 2.2s
+
+#5 [nginx internal] load metadata for docker.io/library/nginx:alpine
+#5 DONE 2.2s
+
+#6 [node internal] load .dockerignore
+#6 transferring context: 2B done
+#6 DONE 0.0s
+
+#7 [nginx internal] load .dockerignore
+#7 transferring context: 2B done
+#7 DONE 0.0s
+
+#8 [node 1/5] FROM docker.io/library/node:alpine@sha256:be4d5e92ac68483ec71440bf5934865b4b7fcb93588f17a24d411d15f0204e4f
+#8 DONE 0.0s
+
+#9 [nginx internal] load build context
+#9 transferring context: 571B done
+#9 DONE 0.0s
+
+#10 [nginx 1/2] FROM docker.io/library/nginx:alpine@sha256:42a516af16b852e33b7682d5ef8acbd5d13fe08fecadc7ed98605ba5e3b26ab8
+#10 CACHED
+
+#11 [nginx 2/2] COPY ./default.conf /etc/nginx/conf.d/default.conf
+#11 DONE 0.0s
+
+#12 [node internal] load build context
+#12 transferring context: 60.89kB 0.1s done
+#12 DONE 0.1s
+
+#13 [node 2/5] WORKDIR /usr/src/app
+#13 CACHED
+
+#14 [node 3/5] COPY package*.json ./
+#14 CACHED
+
+#15 [node 4/5] RUN npm install
+#15 CACHED
+
+#16 [node 5/5] COPY . .
+#16 CACHED
+
+#17 [node] exporting to image
+#17 exporting layers done
+#17 writing image sha256:3d5d541ae878027c0d336babab7b7a33623ce45d504c019e9602569e3aa0ad7d done
+#17 naming to docker.io/library/3-tier-app-node done
+#17 DONE 0.0s
+
+#18 [nginx] exporting to image
+#18 exporting layers 0.0s done
+#18 writing image sha256:9c70a4080afe2da2e74b9871dbb18e199f3a809d540ecd834db7682e78df6e9f done
+#18 naming to docker.io/library/3-tier-app-nginx done
+#18 DONE 0.0s
+
+#19 [nginx] resolving provenance for metadata file
+#19 DONE 0.0s
+
+#20 [node] resolving provenance for metadata file
+#20 DONE 0.0s
+ 3-tier-app-node  Built
+ 3-tier-app-nginx  Built
+ Network 3-tier-app_default  Creating
+ Network 3-tier-app_default  Created
+ Container postgres_db  Creating
+ Container postgres_db  Created
+ Container node_app  Creating
+ Container node_app  Created
+ Container nginx_proxy  Creating
+ Container nginx_proxy  Created
+ Container postgres_db  Starting
+ Container postgres_db  Started
+ Container node_app  Starting
+ Container node_app  Started
+ Container nginx_proxy  Starting
+ Container nginx_proxy  Started
+Build and startup completed successfully... - 250901_085811.
