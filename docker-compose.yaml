@@ -6,15 +6,17 @@ services:
     container_name: postgres_db
     restart: always
     env_file:
-      - ./node/.env
+      - ./.env #Using root .env file
     environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}             # Map DB_USER to POSTGRES_USER 
+      POSTGRES_PASSWORD: ${DB_PASSWORD}     # Map DB_PASSWORD to POSTGRES_PASSWORD
+      POSTGRES_DB: ${DB_NAME}               # Map DB_NAME to POSTGRES_DB
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network    
 
   node:
     build: ./node
@@ -26,6 +28,8 @@ services:
       - db
     ports:
       - "5000:5000"
+    networks:
+      - app-network    
 
   # react:
   #   build: ./react
@@ -44,8 +48,15 @@ services:
       - "80:80"
     depends_on:
       - node
+    networks:
+      - app-network    
     # volumes:
     #   - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
 
-volumes:
-  postgres_data:
+  volumes:
+     postgres_data:
+
+  networks:
+    app-network:
+      driver: bridge
+
