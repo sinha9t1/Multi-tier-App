@@ -1,0 +1,89 @@
+Starting docker compose build - 250901_151914
+Log File: /home/devops/3-tier-app/build-logs/docker_build_250901_151914.log
+#1 [internal] load local bake definitions
+#1 reading from stdin 933B done
+#1 DONE 0.0s
+
+#2 [node internal] load build definition from Dockerfile
+#2 transferring dockerfile: 322B done
+#2 DONE 0.0s
+
+#3 [nginx internal] load build definition from Dockerfile
+#3 transferring dockerfile: 107B done
+#3 DONE 0.0s
+
+#4 [nginx internal] load metadata for docker.io/library/nginx:alpine
+#4 ...
+
+#5 [node internal] load metadata for docker.io/library/node:alpine
+#5 DONE 6.2s
+
+#4 [nginx internal] load metadata for docker.io/library/nginx:alpine
+#4 DONE 6.2s
+
+#6 [node internal] load .dockerignore
+#6 transferring context: 2B done
+#6 DONE 0.0s
+
+#7 [nginx internal] load .dockerignore
+#7 transferring context: 2B done
+#7 DONE 0.0s
+
+#8 [node 1/5] FROM docker.io/library/node:alpine@sha256:be4d5e92ac68483ec71440bf5934865b4b7fcb93588f17a24d411d15f0204e4f
+#8 DONE 0.0s
+
+#9 [nginx 1/2] FROM docker.io/library/nginx:alpine@sha256:42a516af16b852e33b7682d5ef8acbd5d13fe08fecadc7ed98605ba5e3b26ab8
+#9 DONE 0.0s
+
+#10 [nginx internal] load build context
+#10 transferring context: 34B done
+#10 DONE 0.0s
+
+#11 [nginx 2/2] COPY ./default.conf /etc/nginx/conf.d/default.conf
+#11 CACHED
+
+#12 [nginx] exporting to image
+#12 exporting layers done
+#12 writing image sha256:9c70a4080afe2da2e74b9871dbb18e199f3a809d540ecd834db7682e78df6e9f done
+#12 naming to docker.io/library/3-tier-app-nginx done
+#12 DONE 0.0s
+
+#13 [nginx] resolving provenance for metadata file
+#13 DONE 0.0s
+
+#14 [node internal] load build context
+#14 transferring context: 62.57kB 0.1s done
+#14 DONE 0.1s
+
+#15 [node 2/5] WORKDIR /usr/src/app
+#15 CACHED
+
+#16 [node 3/5] COPY package*.json ./
+#16 CACHED
+
+#17 [node 4/5] RUN npm install
+#17 CACHED
+
+#18 [node 5/5] COPY . .
+#18 DONE 1.2s
+
+#19 [node] exporting to image
+#19 exporting layers 0.3s done
+#19 writing image sha256:9ae33421cd5f160a200e56be53486aacc1cdb7ce392fd3a6796a0069a04658b0
+#19 writing image sha256:9ae33421cd5f160a200e56be53486aacc1cdb7ce392fd3a6796a0069a04658b0 done
+#19 naming to docker.io/library/3-tier-app-node 0.0s done
+#19 DONE 0.3s
+
+#20 [node] resolving provenance for metadata file
+#20 DONE 0.0s
+ 3-tier-app-node  Built
+ 3-tier-app-nginx  Built
+ Container postgres_db  Running
+ Container node_app  Recreate
+ Container node_app  Recreated
+ Container nginx_proxy  Running
+ Container postgres_db  Waiting
+ Container postgres_db  Healthy
+ Container node_app  Starting
+ Container node_app  Started
+Build and startup completed successfully... - 250901_151914.
