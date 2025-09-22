@@ -150,7 +150,7 @@ terraform_init() {
     fi
     
     echo "INFO: Initializing Terraform"
-    terraform init /home/devops/Multi-tier-App/infra/terraform
+    terraform init -chdir=/home/devops/Multi-tier-App/infra/terraform
 }
 
 # Terraform operations
