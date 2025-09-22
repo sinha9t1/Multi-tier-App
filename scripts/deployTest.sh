@@ -4,7 +4,7 @@ set -euo pipefail
 # Script configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
-TERRAFORM_DIR="$PROJECT_ROOT/terraform"
+TERRAFORM_DIR="$PROJECT_ROOT/infra/terraform"  # Updated to match your structure
 
 # Configuration
 PROJECT_NAME="multi-tier-app"
@@ -76,6 +76,7 @@ terraform.tfvars
 *.auto.tfvars
 # Plan output files
 *.plan
+tfplan
 # Module/package archives
 *.zip
 *.tar.gz
@@ -140,8 +141,16 @@ ensure_key_pair() {
 # Initialize Terraform
 terraform_init() {
     cd "$TERRAFORM_DIR"
+    
+    # Check if Terraform files exist
+    if ! ls *.tf >/dev/null 2>&1; then
+        echo "ERROR: No Terraform configuration files (*.tf) found in $TERRAFORM_DIR"
+        echo "Please create your Terraform configuration files first (main.tf, variables.tf, etc.)"
+        exit 1
+    fi
+    
     echo "INFO: Initializing Terraform"
-    terraform init
+    terraform init /home/devops/Multi-tier-App/infra/terraform
 }
 
 # Terraform operations
