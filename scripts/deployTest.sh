@@ -4,7 +4,7 @@ set -euo pipefail
 # Script configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
-TERRAFORM_DIR="$PROJECT_ROOT/infra/terraform"  # Updated to match your structure
+TERRAFORM_DIR="$PROJECT_ROOT/infra/terraform"
 
 # Configuration
 PROJECT_NAME="multi-tier-app"
@@ -42,6 +42,22 @@ check_prerequisites() {
         echo "ERROR: Missing required tools: ${missing_tools[*]}"
         exit 1
     fi
+    
+    # Check if Terraform directory exists
+    if [[ ! -d "$TERRAFORM_DIR" ]]; then
+        echo "ERROR: Terraform directory not found: $TERRAFORM_DIR"
+        echo "Expected location: /home/devops/Multi-tier-App/infra/terraform"
+        echo "Please make sure your Terraform files are in the correct location"
+        exit 1
+    fi
+    
+    # Verify Terraform files exist
+    if ! ls "$TERRAFORM_DIR"/*.tf >/dev/null 2>&1; then
+        echo "ERROR: No Terraform files (*.tf) found in $TERRAFORM_DIR"
+        exit 1
+    fi
+    
+    echo "INFO: Found Terraform files in $TERRAFORM_DIR"
     
     # Check AWS credentials
     if ! aws sts get-caller-identity >/dev/null 2>&1; then
@@ -88,9 +104,6 @@ Thumbs.db
 *.tmp
 EOF
 )
-    
-    # Ensure terraform directory exists
-    mkdir -p "$TERRAFORM_DIR"
     
     # Create .gitignore if not exists
     if [ ! -f "$gitignore_file" ]; then
@@ -150,7 +163,7 @@ terraform_init() {
     fi
     
     echo "INFO: Initializing Terraform"
-    terraform init -chdir=/home/devops/Multi-tier-App/infra/terraform
+    terraform init
 }
 
 # Terraform operations
