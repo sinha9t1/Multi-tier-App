@@ -10,7 +10,7 @@ TERRAFORM_DIR="$PROJECT_ROOT/infra/terraform"
 PROJECT_NAME="multi-tier-app"
 AWS_REGION="us-east-1"
 KEY_NAME="${PROJECT_NAME}-dev-key"
-
+ 
 # Usage function
 usage() {
     cat << EOF
