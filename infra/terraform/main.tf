@@ -5,7 +5,7 @@ resource "aws_vpc" "main" {
   instance_tenancy     = "default"
 
   tags = {
-    Name = "Multi-tier-app-VPC"
+    Name = "Multi-tier-App"
   }
 }
 
@@ -46,4 +46,51 @@ resource "aws_route_table" "public_rt" {
 resource "aws_route_table_association" "public_rt_association" {
   subnet_id      = aws_subnet.public.id
   route_table_id = aws_route_table.public_rt.id
+}
+
+# Get current AWS account info
+data "aws_caller_identity" "current" {}
+
+# IAM role for Ansible dynamic inventory
+resource "aws_iam_role" "ansible_inventory" {
+  name = "${var.project_name}-ansible-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          AWS = data.aws_caller_identity.current.arn
+        }
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+
+  tags = {
+    Name    = "${var.project_name}-ansible-role"
+    Project = var.project_name
+  }
+}
+
+# IAM policy for Ansible inventory
+resource "aws_iam_role_policy" "ansible_inventory" {
+  name = "${var.project_name}-ansible-policy"
+  role = aws_iam_role.ansible_inventory.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ec2:DescribeInstances",
+          "ec2:DescribeRegions", 
+          "ec2:DescribeTags"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
 }

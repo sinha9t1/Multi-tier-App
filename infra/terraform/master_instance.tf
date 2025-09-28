@@ -22,13 +22,3 @@ resource "aws_instance" "master_instance" {
     Name = "Master-Instance"
   }
 }
-
-output "master_instance_public_ip" {
-  description = "Public IP of the master instance"  
-  value = aws_instance.master_instance.public_ip
-}
-
-output "master_instance_public_dns" {
-  description = "Public DNS of the master instance"
-  value       = aws_instance.master_instance.public_dns
-}
