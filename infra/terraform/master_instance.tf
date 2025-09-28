@@ -20,5 +20,9 @@ resource "aws_instance" "master_instance" {
     
   tags = {
     Name = "Master-Instance"
+    Project = var.project_name
+    Environment = var.environment
+    Role = "Master"
+    Services = "Jenkins, Nexus, Prometheus, Grafana" # Hardcoded whether it's dev/staging/production, this master instance runs the same services
   }
 }
