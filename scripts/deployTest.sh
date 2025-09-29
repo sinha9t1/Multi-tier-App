@@ -277,22 +277,167 @@ terraform_validate() {
 #Ansible setup
 setup_ansible() {
     echo "INFO: Setting up/testing Ansible dynamic inventory"
-    #Create directory structure if exists
+    #Create directory structure
+    mkdir -p "$ANSIBLE_DIR"/{inventories,group_vars/all,playbooks}
+    mkdir -p ~/.ansible/{inventory_cache,facts_cache}
     
-
-    # Check if inventory file exists
-    if [[ ! -f "inventory.ini" ]]; then
-        echo "ERROR: Ansible inventory file not found: $ANSIBLE_DIR/inventory.ini"
-        exit 1
+    # Get IAM role ARN from Terraform
+    cd "$TERRAFORM_DIR"
+    if ! terraform output ansible_iam_role_arn >/dev/null 2>&1; then
+        echo "ERROR: Terraform output 'ansible_iam_role_arn' not found"
+        echo "Make sure you've applied the enhanced Terraform configuration"
+        return 1
     fi
 
-    echo "INFO: Testing Ansible connectivity with inventory"
-    ansible all -i inventory.ini -m ping
+    local role_arn=$(terraform output -raw ansible_iam_role_arn)
+    echo "INFO: Using IAM Role: $role_arn"
 
-    echo "INFO: Running Ansible playbook to setup application"
-    ansible-playbook -i inventory.ini site.yml --private-key "$PROJECT_ROOT/keys/${KEY_NAME}.pem" --user ec2-user
+    # Setup AWS profile for Ansible
+    aws configure set region "$AWS_REGION" --profile ansible-inventory
+    aws configure set role_arn "$role_arn" --profile ansible-inventory
+    aws configure set source_profile default --profile ansible-inventory
 
-    echo "INFO: Ansible setup/test completed successfully"
+    # Create dynamic inventory file
+    cat > "$ANSIBLE_DIR/inventories/aws_${ENVIRONMENT}.yml" << EOF
+plugin: aws_ec2
+regions:
+  - $AWS_REGION
+
+filters:
+  tag:Project: ["$PROJECT_NAME"]
+  tag:Environment: ["$ENVIRONMENT"]
+  instance-state-name: ["running"]
+
+cache: true
+cache_plugin: jsonfile
+cache_timeout: 300
+cache_connection: ~/.ansible/inventory_cache/$ENVIRONMENT
+
+hostnames:
+  - tag:Name
+  - private-ip-address
+
+compose:
+  ansible_host: public_ip_address
+  ansible_user: ubuntu
+  instance_type: instance_type
+  private_ip: private_ip_address
+  services: tags.Services | default('')
+
+keyed_groups:
+  - prefix: role
+    key: tags.Role
+  - prefix: env  
+    key: tags.Environment
+
+groups:
+  master_servers: "tags.Role == 'master'"
+  jenkins_servers: "'jenkins' in (tags.Services | default(''))"
+  nexus_servers: "'nexus' in (tags.Services | default(''))"
+  monitoring_servers: "'prometheus' in (tags.Services | default('')) or 'grafana' in (tags.Services | default(''))"
+EOF
+
+  # Create ansible.cfg
+    cat > "$ANSIBLE_DIR/ansible.cfg" << 'EOF'
+[defaults]
+inventory = inventories/aws_production.yml
+host_key_checking = False
+remote_user = ubuntu
+private_key_file = ../keys/multi-tier-app-dev-key.pem
+timeout = 30
+gathering = smart
+retry_files_enabled = False
+
+[inventory]
+enable_plugins = aws_ec2
+cache = True
+
+[ssh_connection]
+ssh_args = -o ControlMaster=auto -o ControlPersist=60s
+pipelining = True
+EOF
+
+    echo "INFO: Ansible setup completed"
+}
+
+# Test Ansible
+test_ansible() {
+    cd "$ANSIBLE_DIR"
+    export AWS_PROFILE=ansible-inventory
+    
+    local inventory_file="inventories/aws_${ENVIRONMENT}.yml"
+    
+    echo "INFO: Testing dynamic inventory..."
+
+# Clear cache for fresh test
+    rm -rf ~/.ansible/inventory_cache/$ENVIRONMENT 2>/dev/null || true
+    
+    if ansible-inventory -i "$inventory_file" --list > /dev/null 2>&1; then
+        echo "✓ Dynamic inventory working 😊!"
+
+        # Show discovered hosts
+        local host_count=$(ansible-inventory -i "$inventory_file" --list 2>/dev/null | jq -r '._meta.hostvars | keys | length' 2>/dev/null || echo "0")
+        echo "INFO: Found $host_count hosts"
+        
+        if [[ $host_count -gt 0 ]]; then
+            echo "INFO: Host groups:"
+            ansible-inventory -i "$inventory_file" --graph
+            
+            echo "INFO: Testing connectivity..."
+            if ansible master_servers -i "$inventory_file" -m ping --one-line 2>/dev/null; then
+                echo "✓ Master server reachable!"
+            else
+                echo "⚠ Master server not yet reachable (may still be starting) 😒"
+            fi
+        fi
+    else
+        echo "✗ Dynamic inventory failed 😣"
+        echo "Check AWS credentials and Terraform outputs"
+        return 1
+    fi
+}
+
+# Status check
+show_status() {
+    echo "=== Infrastructure Status ==="
+    echo "Project: $PROJECT_NAME"
+    echo "Environment: $ENVIRONMENT"
+    echo "Region: $AWS_REGION"
+    echo
+    
+    # Check Terraform state
+    cd "$TERRAFORM_DIR"
+    if [[ -f "terraform.tfstate" ]]; then
+        echo "✓ Terraform state exists"
+        
+        if terraform output master_instance_public_ip >/dev/null 2>&1; then
+            local public_ip=$(terraform output -raw master_instance_public_ip)
+            echo "✓ Master Instance IP: $public_ip"
+        fi
+        
+        if terraform output ansible_iam_role_arn >/dev/null 2>&1; then
+            echo "✓ Ansible IAM role configured"
+        fi
+    else
+        echo "✗ No Terraform state - infrastructure not deployed"
+        return 0
+    fi
+    
+    # Check Ansible if configured
+    if [[ -f "$ANSIBLE_DIR/inventories/aws_${ENVIRONMENT}.yml" ]]; then
+        echo "✓ Ansible inventory configured"
+        
+        export AWS_PROFILE=ansible-inventory
+        cd "$ANSIBLE_DIR"
+        
+        if ansible-inventory -i "inventories/aws_${ENVIRONMENT}.yml" --list >/dev/null 2>&1; then
+            echo "✓ Dynamic inventory working"
+        else
+            echo "⚠ Dynamic inventory issues"
+        fi
+    else
+        echo "⚠ Ansible not configured - run: $0 ansible"
+    fi
 }
 
 
