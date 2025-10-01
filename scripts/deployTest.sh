@@ -447,6 +447,9 @@ main() {
         usage
         exit 1
     fi
+
+    # parse CLI arguments (sets COMMAND, ENV_NAME, SKIP_ANSIBLE, etc.)
+    parse_args "$@"
     
     local command="$1"
     
